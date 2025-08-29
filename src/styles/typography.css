@@ -12,7 +12,9 @@
     th {
       @apply mb-3 text-foreground;
     }
-
+  .prose .katex-display {
+    @apply text-foreground;
+  }
     h3 {
       @apply italic;
     }

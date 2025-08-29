@@ -177,8 +177,10 @@ const nextPost =
 
     // Create the progress bar div
     const progressBar = document.createElement("div");
-    progressBar.className = "progress-bar h-1 w-0 bg-accent";
+    progressBar.className = "progress-bar h-1 w-0";
     progressBar.id = "myBar";
+    // Use a pastel iridescent gradient with higher opacity for the progress bar
+    progressBar.style.background = "linear-gradient(90deg,rgb(255, 164, 191),rgb(255, 229, 172),rgb(177, 255, 186),rgb(176, 255, 252),rgb(181, 163, 252),rgb(255, 172, 200))";
 
     // Append the progress bar to the progress container
     progressContainer.appendChild(progressBar);

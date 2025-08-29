@@ -1,6 +1,5 @@
 @import "tailwindcss";
 @import "./typography.css";
-
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 :root,
@@ -66,4 +65,79 @@ html[data-theme="dark"] {
 /* Anything that has been anchored to should have extra scroll margin */
 :target {
   scroll-margin-block: 1rem;
+}
+.side-by-side {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+.side-by-side > div {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.side-by-side img {
+    margin-top: 0rem;
+
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 0rem;
+}
+.side-by-side figcaption {
+  text-align: center;
+  margin-top: 0rem; /* Reduce this value for less space */
+
+}
+.hover-swap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hover-swap .img-container {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.hover-swap .main-img {
+  display: block;
+}
+
+.hover-swap .hover-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+  width: 100%;
+  height: auto;
+}
+
+/* Ensure figcaption is always below image */
+.hover-swap figcaption {
+  width: 100%;
+  order: 2;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.hover-swap .caption-hover {
+  display: none;
+}
+.hover-swap:hover .caption-default {
+  display: none;
+}
+.hover-swap:hover .caption-hover {
+  display: block;
+}
+
+.hover-swap:hover .main-img {
+  display: none;
+}
+
+.hover-swap:hover .hover-img {
+  display: block;
 }

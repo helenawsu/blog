@@ -2,8 +2,8 @@
 layout: ../layouts/AboutLayout.astro
 title: "About"
 ---
-
-AstroPaper is a minimal, accessible and SEO-friendly blog theme built with [Astro](https://astro.build/) and [Tailwind CSS](https://tailwindcss.com/).
+hi
+<!-- AstroPaper is a minimal, accessible and SEO-friendly blog theme built with [Astro](https://astro.build/) and [Tailwind CSS](https://tailwindcss.com/).
 
 ![Astro Paper](public/astropaper-og.jpg)
 
@@ -34,4 +34,4 @@ Found a bug 🐛 or have an improvement ✨ in mind? Feel free to open an [issue
 
 If you find this theme helpful, you can also [sponsor me on GitHub](https://github.com/sponsors/satnaing) or [buy me a coffee](https://buymeacoffee.com/satnaing) to show your support — every penny counts.
 
-Kyay zuu! 🙏🏼
+Kyay zuu! 🙏🏼 -->
