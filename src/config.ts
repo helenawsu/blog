@@ -1,10 +1,10 @@
 export const SITE = {
-  website: "https://astro-paper.pages.dev/", // replace this with your deployed domain
-  author: "Sat Naing",
-  profile: "https://satnaing.dev/",
-  desc: "A minimal, responsive and SEO-friendly Astro blog theme.",
+  website: "https://helenasu-blog.vercel.app/", // replace this with your deployed domain
+  author: "Helena Su",
+  profile: "https://helenawsu.github.io/",
+  desc: "Helena's blog",
   title: "Helena's Blog",
-  ogImage: "astropaper-og.jpg",
+  ogImage: "src/assets/icons/Hicon32.ico",
   lightAndDarkMode: true,
   postPerIndex: 4,
   postPerPage: 4,
