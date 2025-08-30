@@ -3,6 +3,8 @@ import IconMail from "@/assets/icons/IconMail.svg";
 import IconGitHub from "@/assets/icons/IconGitHub.svg";
 import IconBrandX from "@/assets/icons/IconBrandX.svg";
 import IconLinkedin from "@/assets/icons/IconLinkedin.svg";
+import Iconcamera from "@/assets/icons/camera.svg";
+import IconSun from "@/assets/icons/IconSun.svg";
 import IconWhatsapp from "@/assets/icons/IconWhatsapp.svg";
 import IconFacebook from "@/assets/icons/IconFacebook.svg";
 import IconTelegram from "@/assets/icons/IconTelegram.svg";
@@ -17,12 +19,12 @@ interface Social {
 }
 
 export const SOCIALS: Social[] = [
-  {
-    name: "GitHub",
-    href: "https://github.com/helenawsu",
-    linkTitle: `${SITE.title} on GitHub`,
-    icon: IconGitHub,
-  },
+  // {
+  //   name: "GitHub",
+  //   href: "https://github.com/helenawsu",
+  //   linkTitle: `${SITE.title} on GitHub`,
+  //   icon: IconGitHub,
+  // },
   // {
   //   name: "X",
   //   href: "https://x.com/username",
@@ -35,11 +37,17 @@ export const SOCIALS: Social[] = [
   //   linkTitle: `${SITE.title} on LinkedIn`,
   //   icon: IconLinkedin,
   // },
-  {
-    name: "Mail",
-    href: "mailto:helenasu2004@gmail.com",
-    linkTitle: `Send an email to ${SITE.title}`,
-    icon: IconMail,
+  // {
+  //   name: "Mail",
+  //   href: "mailto:helenasu2004@gmail.com",
+  //   linkTitle: `Send an email to ${SITE.title}`,
+  //   icon: IconMail,
+  // },
+    {
+    name: "Photography",
+    href: "https://helenawsu.github.io/photography/",
+    linkTitle: `photogrpahy site ${SITE.title}`,
+    icon: Iconcamera,
   },
 ] as const;
 
