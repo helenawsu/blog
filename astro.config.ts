@@ -39,6 +39,11 @@ export default defineConfig({
     },
   },
   vite: {
+      resolve: {
+    alias: {
+      '@': new URL('./src', import.meta.url).pathname,
+    },
+  },
     // eslint-disable-next-line
     // @ts-ignore
     // This will be fixed in Astro 6 with Vite 7 support
