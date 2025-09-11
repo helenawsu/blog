@@ -302,5 +302,6 @@ html { scroll-behavior: smooth; }
   width: 2.5rem;
   pointer-events: none;
 }
-.horizontal-gallery::before { left: 0; background: linear-gradient(90deg, var(--astro-paper-bg, #fff), transparent); }
-.horizontal-gallery::after { right: 0; background: linear-gradient(270deg, var(--astro-paper-bg, #fff), transparent); }
+/* Use the theme background variable so the fade matches dark/light mode */
+.horizontal-gallery::before { left: 0; background: linear-gradient(90deg, var(--color-background), transparent); }
+.horizontal-gallery::after { right: 0; background: linear-gradient(270deg, var(--color-background), transparent); }

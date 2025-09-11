@@ -3,7 +3,7 @@ title: "CV Project 1: Image Alignment"
 author: Helena Su
 pubDatetime: 2025-09-12
 slug: cv-proj1
-featured: false
+featured: true
 draft: false
 tags:
   - Computer Vision
