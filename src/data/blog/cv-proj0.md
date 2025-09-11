@@ -17,16 +17,16 @@ This simple project explores the effect of focal length on perspective. Shorter 
 <figure class="side-by-side">
   <div class="hover-swap">
     <div class="img-container">
-      <img src="/images/IMG_6043.webp" alt="a building" class="main-img" />
-      <img src="/images/IMG_6056.webp" alt="a building" class="hover-img" />
+      <img src="/images/proj0/IMG_6043.webp" alt="a building" class="main-img" />
+      <img src="/images/proj0/IMG_6056.webp" alt="a building" class="hover-img" />
     </div>
     <figcaption class="text-center caption-default">selfie from closeup</figcaption>
     <figcaption class="text-center caption-hover"></figcaption>
   </div>
   <div class="hover-swap">
     <div class="img-container">
-      <img src="/images/IMG_6056.webp" alt="another building" class="main-img" />
-      <img src="/images/IMG_6043.webp" alt="another building" class="hover-img" />
+      <img src="/images/proj0/IMG_6056.webp" alt="another building" class="main-img" />
+      <img src="/images/proj0/IMG_6043.webp" alt="another building" class="hover-img" />
     </div>
     <figcaption class="text-center caption-default">selfie from far away</figcaption>
     <figcaption class="text-center caption-hover"></figcaption>
@@ -39,16 +39,16 @@ Focal length is the distance between the len's center and its focal point, which
 <figure class="side-by-side">
   <div class="hover-swap">
     <div class="img-container">
-      <img src="/images/IMG_5832.webp" alt="a building" class="main-img" />
-      <img src="/images/IMG_5833.webp" alt="a building" class="hover-img" />
+      <img src="/images/proj0/IMG_5832.webp" alt="a building" class="main-img" />
+      <img src="/images/proj0/IMG_5833.webp" alt="a building" class="hover-img" />
     </div>
     <figcaption class="text-center caption-default">building from far away</figcaption>
     <figcaption class="text-center caption-hover"></figcaption>
   </div>
   <div class="hover-swap">
     <div class="img-container">
-      <img src="/images/IMG_5833.webp" alt="another building" class="main-img" />
-      <img src="/images/IMG_5832.webp" alt="another building" class="hover-img" />
+      <img src="/images/proj0/IMG_5833.webp" alt="another building" class="main-img" />
+      <img src="/images/proj0/IMG_5832.webp" alt="another building" class="hover-img" />
     </div>
     <figcaption class="text-center caption-default">building from close up</figcaption>
     <figcaption class="text-center caption-hover"></figcaption>
@@ -59,6 +59,6 @@ The columns of the building appear parrallel when viewing from far away. From a 
 
 ## 3. The Dolly Zoom
 <figure>
-<img style="width:50%;" src="/images/dolly_zoom.gif" alt="dolly zoom"/>
+<img style="width:50%;" src="/images/proj0/dolly_zoom.gif" alt="dolly zoom"/>
 <figcaption class="text-center">dolly zoom</figcaption>
 </figure>

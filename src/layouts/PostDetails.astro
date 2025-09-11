@@ -37,7 +37,7 @@ const {
 
 const { Content } = await render(post);
 
-let ogImageUrl: string | undefined;
+let ogImageUrl;
 
 // Determine OG image source
 if (typeof initOgImage === "string") {
@@ -66,8 +66,6 @@ const layoutProps = {
   ogImage,
   scrollSmooth: true,
 };
-
-/* ========== Prev/Next Posts ========== */
 
 const allPosts = posts.map(({ data: { title }, id, filePath }) => ({
   id,
@@ -110,6 +108,12 @@ const nextPost =
       >
       <EditPost {hideEditPost} {post} class="max-sm:hidden" />
     </div>
+
+    <!-- left-side thumbnail TOC (populated client-side) -->
+    <aside id="toc-thumbs" class="toc-thumbs" aria-label="Post sections" hidden>
+      <ul class="toc-thumbs-list"></ul>
+    </aside>
+
     <article
       id="article"
       class="app-prose mx-auto mt-8 max-w-app prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
@@ -287,4 +291,94 @@ const nextPost =
   document.addEventListener("astro:after-swap", () =>
     window.scrollTo({ left: 0, top: 0, behavior: "instant" })
   );
+</script>
+
+<script is:inline>
+  (function () {
+    const slugify = (s) =>
+      String(s || "")
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, "-")
+        .replace(/[^\w\-]+/g, "")
+        .replace(/\-\-+/g, "-");
+    // Build a nested TOC for H1, H2, H3 without thumbnails.
+    // This function is idempotent and can be called after client-side navigation.
+    let currentObserver = null;
+    function buildToc() {
+      const main = document.getElementById("main-content");
+      const article = document.querySelector("article.post-content") || document.querySelector("article");
+      const toc = document.getElementById("toc-thumbs");
+      if (!article || !toc || !main) return;
+
+      const container = toc.querySelector(".toc-thumbs-list");
+      if (!container) return;
+
+      // clear previous contents and observer
+      if (currentObserver) {
+        currentObserver.disconnect();
+        currentObserver = null;
+      }
+      container.innerHTML = "";
+      toc.hidden = true;
+      main.classList.remove("has-toc");
+
+      // select H1–H3
+      const headings = Array.from(article.querySelectorAll("h1, h2, h3"));
+      if (headings.length === 0) { return; }
+
+      toc.hidden = false;
+      main.classList.add("has-toc");
+
+      // stack of UL elements per level
+      const stacks = [container];
+
+      headings.forEach((h) => {
+        const level = Number(h.tagName.charAt(1));
+        if (!h.id) h.id = slugify(h.textContent || "section");
+
+        // ensure stack has an element for this level
+        while (stacks.length <= level - 1) {
+          const ul = document.createElement('ul');
+          ul.className = 'toc-thumbs-list nested';
+          // append to last li of previous stack if exists, otherwise to root
+          const parentLi = stacks[stacks.length - 1].lastElementChild;
+          if (parentLi) parentLi.appendChild(ul);
+          else stacks[stacks.length - 1].appendChild(ul);
+          stacks.push(ul);
+        }
+
+        // if moving up levels, pop stacks
+        while (stacks.length > level) stacks.pop();
+
+        const li = document.createElement('li');
+        li.className = `toc-item level-${level}`;
+        const a = document.createElement('a');
+        a.href = `#${h.id}`;
+        a.className = 'toc-link';
+        a.textContent = h.textContent || '';
+
+        li.appendChild(a);
+        stacks[stacks.length - 1].appendChild(li);
+      });
+
+      // highlight active heading
+      currentObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const id = entry.target.id;
+            const link = document.querySelector(`#toc-thumbs a[href="#${id}"]`);
+            if (link) link.classList.toggle('active', entry.isIntersecting);
+          });
+        },
+        { root: null, rootMargin: '0px 0px -66% 0px', threshold: 0.01 }
+      );
+      headings.forEach(h => currentObserver.observe(h));
+    }
+
+    document.addEventListener('DOMContentLoaded', buildToc);
+    document.addEventListener('astro:after-swap', buildToc);
+    // also run immediately in case DOMContentLoaded already fired
+    setTimeout(buildToc, 0);
+  })();
 </script>

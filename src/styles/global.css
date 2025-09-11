@@ -4,19 +4,19 @@
 
 :root,
 html[data-theme="light"] {
-  --background: #fdfdfd;
-  --foreground: #282728;
-  --accent: #006cac;
-  --muted: #e6e6e6;
-  --border: #ece9e9;
+  --background: #f4f0ee;
+  --foreground: #413741;
+  --accent: #9bcf00;
+  --muted: #d9dbcd;
+  --border: #85552b;
 }
 
 html[data-theme="dark"] {
-  --background: #212737;
+  --background: #354649;
   --foreground: #eaedf3;
   --accent: #ff6b01;
   --muted: #343f60;
-  --border: #ab4b08;
+  --border: #6dab08;
 }
 
 @theme inline {
@@ -141,3 +141,166 @@ html[data-theme="dark"] {
 .hover-swap:hover .hover-img {
   display: block;
 }
+
+.toc-thumbs {
+  position: fixed;
+  left: 1rem;
+  top: 6.5rem;
+  width: 300px;
+  max-height: calc(100vh - 8rem);
+  overflow-y: auto;
+  padding: 0.5rem;
+  z-index: 50;
+  background: transparent;
+  pointer-events: auto;
+}
+
+.toc-thumbs-list {
+  list-style: none;
+  margin: 0;
+  padding: 0.25rem 0;
+}
+
+.toc-thumbs-list.nested {
+  padding-left: 0.5rem;
+}
+
+.toc-item { display: block; }
+
+.toc-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  padding: 0.25rem 0.375rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.toc-link:hover,
+.toc-link.active {
+  background: rgba(0,0,0,0.04);
+  color: var(--color-accent);
+}
+
+/* level indentation */
+.toc-item.level-1 { padding-left: 0; }
+.toc-item.level-2 { padding-left: 0.5rem; }
+.toc-item.level-3 { padding-left: 1rem; }
+
+/* level font sizes apply to the link so they aren't overridden */
+.toc-item.level-2 .toc-link { font-size: 0.8rem;color: rgb(129, 129, 129);}
+.toc-item.level-3 .toc-link { font-size: 0.75rem; color: rgb(151, 151, 151);}
+
+/* Responsive: hide on small screens */
+@media (max-width: 1250px) {
+  .toc-thumbs { display: none; }
+}
+
+/* Do not change main layout; TOC is fixed and should not shift content */
+@media (min-width: 901px) {
+  .toc-thumbs { left: 1rem; }
+}
+
+/* enable smooth scrolling for TOC links */
+html { scroll-behavior: smooth; }
+
+/* active link styling */
+.toc-link.active {
+  font-weight: 600;
+  color: var(--color-accent);
+  background: rgba(0,0,0,0.04);
+  border-left: 3px solid var(--color-accent);
+  padding-left: 0.25rem;
+}
+
+/* placeholder thumbnail when no image is available */
+.toc-thumb.placeholder {
+  display: inline-block;
+  width: 56px;
+  height: 40px;
+  border-radius: 4px;
+  background: linear-gradient(135deg, rgba(0,0,0,0.04), rgba(0,0,0,0.02));
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.02);
+}
+
+/* Horizontal gallery: one-line square images with horizontal scrolling */
+.horizontal-gallery {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+.horizontal-gallery .hg-track {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.25rem 0.25rem;
+  align-items: stretch;
+  /* enable snap */
+  scroll-snap-type: x mandatory;
+}
+.horizontal-gallery .hg-item {
+  flex: 0 0 auto;
+  width: min(220px, 28vw);
+  aspect-ratio: auto; /* let media define aspect */
+  border-radius: 0px;
+  overflow: hidden;
+  background: transparent;
+  scroll-snap-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* Remove visible borders/shadows from gallery items */
+.horizontal-gallery .hg-item {
+  box-shadow: none !important;
+  border: none !important;
+  outline: none !important;
+}
+.horizontal-gallery .hg-media,
+.horizontal-gallery .hg-media img,
+.horizontal-gallery .hg-item img {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+.horizontal-gallery .hg-caption {
+  border-top: none !important;
+  background: transparent;
+}
+
+.horizontal-gallery .hg-media {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  display: block;
+  /* remove background so image fills the area without visible padding */
+  background: transparent;
+}
+.horizontal-gallery .hg-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* fit-crop: fill and crop to square */
+  object-position: center;
+  display: block;
+  margin-top: 1rem;
+}
+.horizontal-gallery .hg-caption {
+  padding: 0.35rem 0.5rem;
+  font-size: 0.85rem;
+  color: var(--color-foreground);
+  text-align: center;
+}
+
+/* optional fading edges */
+.horizontal-gallery::before,
+.horizontal-gallery::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2.5rem;
+  pointer-events: none;
+}
+.horizontal-gallery::before { left: 0; background: linear-gradient(90deg, var(--astro-paper-bg, #fff), transparent); }
+.horizontal-gallery::after { right: 0; background: linear-gradient(270deg, var(--astro-paper-bg, #fff), transparent); }
