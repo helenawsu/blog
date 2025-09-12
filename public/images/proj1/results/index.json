@@ -1,13 +1,16 @@
 [
-  "cathedral.webp",
-  "church.webp",
-  "emir.webp",
-  "harvesters.webp",
-  "icon.webp",
-  "italil.webp",
-  "lugano.webp",
-  "monastery.webp",
-  "self_portrait.webp",
-  "siren.webp",
-  "tobolsk.webp"
+  {"file":"cathedral.webp","caption":"Cathedral (-4, -2), (-12, -4)"},
+  {"file":"church.webp","caption":"Church (-26, -4), (-58, 4)"},
+  {"file":"emir.webp","caption":"Emir (-50, -24), (-106, -42)"},
+  {"file":"harvesters.webp","caption":"Harvesters (-60, -16), (-124, -12)"},
+  {"file":"icon.webp","caption":"Icon (-40, -16), (-88, -22)"},
+  {"file":"italil.webp","caption":"Italil (-38, -22), (-76, -36)"},
+  {"file":"lugano.webp","caption":"Lugano (-40, 18), (-92, 28)"},
+  {"file":"monastery.webp","caption":"Monastery (4, -2), (-2, -2)"},
+  {"file":"self_portrait.webp","caption":"Self Portrait (-80, -30), (-176, -38)"},
+  {"file":"siren.webp","caption":"Siren (-48, 8), (-96, 24)"},
+  {"file":"tobolsk.webp","caption":"Tobolsk (-2, -2), (-6, -4)"},
+  {"file":"three_generations.webp","caption":"3 Generations (-56, -12), (-112, -8)"},
+  {"file":"melons.webp","caption":"Melon (-80, -10), (-176, -14)"},
+{"file":"lastochikino.webp","caption":"Lastochikino (2, 2), (-76, 8)"}
 ]

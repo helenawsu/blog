@@ -321,7 +321,19 @@ h2,
     margin-bottom: 0.5rem;
   }
 }
+h1,
+.app-prose h1 {
+  margin-top: 2.5rem; /* space above H1 */
+  margin-bottom: 0.5rem; /* space below H1 */
+}
 
+@media (max-width: 640px) {
+  h1,
+  .app-prose h1 {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+  }
+}
 .side-by-side-arrows {
   display: flex;
   align-items: center;
@@ -333,13 +345,15 @@ h2,
 }
 
 .ssa-item {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   width: min(220px, 22vw);
   margin-top: 0rem;
   margin-bottom: 0.5rem;
-  border: none !important; 
+  border: none !important;
+  padding-bottom: 1.6rem; /* reserve space for absolutely-positioned caption */
 }
 .ssa-item img {
   width: 100%;
@@ -350,21 +364,30 @@ h2,
   border: none !important; 
 }
 .ssa-item figcaption {
-  margin-top: 0.35rem;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 0.35rem;
+  margin: 0;
   font-size: 0.85rem;
   text-align: center;
+  width: 100%;
 }
 
 .ssa-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 1.25rem;
-  color: var(--color-muted);
+  color: var(--color-foreground);
   padding: 0 0.5rem;
 }
 
 @media (max-width: 640px) {
   .side-by-side-arrows { gap: 0.5rem; }
-  .ssa-item { width: 36vw; }
+  .ssa-item { width: 36vw; padding-bottom: 1.2rem; }
   .ssa-item img { max-height: 160px; }
+  .ssa-item figcaption { bottom: 0.25rem; }
 }
 
 /* Grid gallery */
@@ -452,4 +475,29 @@ h2,
   margin-top: 0.5rem;
   text-align: center;
   color: #fff;
+}
+
+/* Equal square tiles for side-by-side showcases */
+.side-by-side.equal {
+  align-items: stretch;
+  gap: 1rem;
+}
+.side-by-side.equal > figure {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+.side-by-side.equal > figure img,
+.side-by-side.equal > figure .img-container img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
+  border: none !important;
+  box-shadow: none !important;
+}
+.side-by-side.equal > figure figcaption {
+  margin-top: 0.35rem;
+  text-align: center;
 }

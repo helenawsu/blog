@@ -14,22 +14,22 @@ description:
 # Overview
 <div class="side-by-side-arrows" aria-hidden="false" style="margin-top:0rem;">
   <figure class="ssa-item">
-    <img src="/images/proj1/results/church.webp" alt="Step 1" loading="lazy" />
-    <figcaption>Step 1</figcaption>
+    <img src="/images/proj1/other/out.webp" alt="Step 1" loading="lazy" />
+    <figcaption>Step 1: Misaligned</figcaption>
   </figure>
 
   <div class="ssa-arrow" aria-hidden="true">➜</div>
 
   <figure class="ssa-item">
-    <img src="/images/proj1/results/church.webp" alt="Step 2" loading="lazy" />
-    <figcaption>Step 2</figcaption>
+    <img src="/images/proj1/other/church4.webp" alt="Step 2" loading="lazy" />
+    <figcaption>Step 2: Downscaled</figcaption>
   </figure>
 
   <div class="ssa-arrow" aria-hidden="true">➜</div>
 
   <figure class="ssa-item">
     <img src="/images/proj1/results/church.webp" alt="Step 3" loading="lazy" />
-    <figcaption>Step 3</figcaption>
+    <figcaption>Step 3: Aligned</figcaption>
   </figure>
 </div>
 
@@ -49,7 +49,10 @@ description:
       .replace(/\b(\w)/g, (m) => m.toUpperCase());
   }
 
-  function createItem(name) {
+  function createItem(entry) {
+    const name = typeof entry === 'string' ? entry : entry.file;
+    const captionText = (typeof entry === 'string') ? filenameLabel(name) : (entry.caption || filenameLabel(name));
+
     const item = document.createElement('div');
     item.className = 'gg-item';
 
@@ -57,19 +60,19 @@ description:
     media.className = 'gg-media';
     const img = document.createElement('img');
     img.src = `/images/proj1/results/${name}`;
-    img.alt = filenameLabel(name);
+    img.alt = captionText;
     img.loading = 'lazy';
     media.appendChild(img);
 
     const caption = document.createElement('figcaption');
     caption.className = 'gg-caption';
-    caption.textContent = filenameLabel(name);
+    caption.textContent = captionText;
 
     item.appendChild(media);
     item.appendChild(caption);
 
-    // click to open modal
-    item.addEventListener('click', () => openModal(name));
+    // click to open modal; pass the original entry so modal can use caption if available
+    item.addEventListener('click', () => openModal(entry));
     return item;
   }
 
@@ -77,7 +80,7 @@ description:
     const track = document.querySelector('.grid-gallery .gg-track');
     if (!track) return;
     track.innerHTML = '';
-    list.forEach((name) => track.appendChild(createItem(name)));
+    list.forEach((entry) => track.appendChild(createItem(entry)));
   }
 
   async function buildGallery() {
@@ -117,15 +120,19 @@ description:
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
   }
 
-  function openModal(name) {
+  function openModal(entry) {
     ensureModal();
     const modal = document.getElementById('gg-modal');
     if (!modal) return;
     const modalImg = modal.querySelector('.gg-img');
     const modalCaption = modal.querySelector('.gg-caption');
+
+    const name = typeof entry === 'string' ? entry : entry.file;
+    const captionText = (typeof entry === 'string') ? filenameLabel(name) : (entry.caption || filenameLabel(name));
+
     modalImg.src = `/images/proj1/results/${name}`;
-    modalImg.alt = filenameLabel(name);
-    modalCaption.textContent = filenameLabel(name);
+    modalImg.alt = captionText;
+    modalCaption.textContent = captionText;
     modal.hidden = false;
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
@@ -154,11 +161,31 @@ description:
 })();
 </script>
 
-# Single-Scale Alignment
-
 Given three seperate color channel images, the goal is to align them properly by searching for the correct alignment vector. A similarity score for each alignment vector is caluclated and the highest score will be selected. The naive method is simply doing an exhaustive search within a  range.
 
 For images with higher resolution, exhaustive search is too slow because it scales $O(n^2)$ wrt to search range. To optimize the search, I built an image pyramid of progressive level of downscaleness. This way, the search range can be small at each level and gradually refined to the final value.
+
+
+# Single-Scale Alignment
+Single scale alignment works by selecting a range of shift vectors and compare each similarity score. The process is done twice, once aligning green channel to blue channel, twice aligning red channel to blue channel.
+
+<!-- two-square images side-by-side: good_range and bad_range -->
+<div class="side-by-side equal">
+  <figure>
+    <img src="/images/proj1/other/good_range.jpg" alt="Good Range" loading="lazy" />
+    <figcaption class="text-center">Good range</figcaption>
+  </figure>
+
+  <figure>
+    <img src="/images/proj1/other/bad_range.jpg" alt="Bad Range" loading="lazy" />
+    <figcaption class="text-center">Bad range</figcaption>
+  </figure>
+</div>
+
+## Similairy Metric
+There are different similarity metric for image alignment. The most common one simply bla bla. However, colors channels may naturally have different levels of value even in the same area. Thus, I calculate the horizontal and vertical gradient by taking the difference across neighboring pixels in the x and y directions. The final scalar score is simply calculated as the sum of two squared gradient matrices.
+## Search Range
+Picking the correct size of search window required some tuning. One visualization that helped me is the similarity score matrix in the search window. If the search range is big enough, there should be one alignment vector that is noticeably better than any other pixels. Otherwise, the search range should be expanded.
 
 # Multi-Scale Alignment
 # Image Pyramid (Mipmap)
