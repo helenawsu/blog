@@ -32,19 +32,7 @@ description:
     <figcaption>Step 3</figcaption>
   </figure>
 </div>
-<!-- Responsive grid gallery -->
-<div class="grid-gallery" aria-label="Gallery">
-  <div class="gg-track"></div>
-</div>
 
-<!-- Modal / lightbox -->
-<div id="gg-modal" class="gg-modal" hidden aria-hidden="true">
-  <button class="gg-close" aria-label="Close">×</button>
-  <figure class="gg-figure">
-    <img class="gg-img" src="" alt="" />
-    <figcaption class="gg-caption"></figcaption>
-  </figure>
-</div>
 
 <script>
 (function () {
@@ -106,14 +94,35 @@ description:
     populate(fallback);
   }
 
-  // Modal functions
-  const modal = document.getElementById('gg-modal');
-  const modalImg = modal?.querySelector('.gg-img');
-  const modalCaption = modal?.querySelector('.gg-caption');
-  const closeBtn = modal?.querySelector('.gg-close');
+  // Modal helper: create modal if not present
+  function ensureModal() {
+    if (document.getElementById('gg-modal')) return;
+    const modal = document.createElement('div');
+    modal.id = 'gg-modal';
+    modal.className = 'gg-modal';
+    modal.hidden = true;
+    modal.setAttribute('aria-hidden', 'true');
+    modal.innerHTML = `
+      <button class="gg-close" aria-label="Close">×</button>
+      <figure class="gg-figure">
+        <img class="gg-img" src="" alt="" />
+        <figcaption class="gg-caption"></figcaption>
+      </figure>
+    `;
+    document.body.appendChild(modal);
+
+    const closeBtn = modal.querySelector('.gg-close');
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+  }
 
   function openModal(name) {
+    ensureModal();
+    const modal = document.getElementById('gg-modal');
     if (!modal) return;
+    const modalImg = modal.querySelector('.gg-img');
+    const modalCaption = modal.querySelector('.gg-caption');
     modalImg.src = `/images/proj1/results/${name}`;
     modalImg.alt = filenameLabel(name);
     modalCaption.textContent = filenameLabel(name);
@@ -123,22 +132,25 @@ description:
   }
 
   function closeModal() {
+    const modal = document.getElementById('gg-modal');
     if (!modal) return;
     modal.hidden = true;
     modal.setAttribute('aria-hidden', 'true');
-    modalImg.src = '';
+    const modalImg = modal.querySelector('.gg-img');
+    if (modalImg) modalImg.src = '';
     document.body.style.overflow = '';
   }
 
-  if (closeBtn) closeBtn.addEventListener('click', closeModal);
-  if (modal) modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
-
   // Init
-  if (document.readyState === 'complete' || document.readyState === 'interactive') buildGallery();
-  else document.addEventListener('DOMContentLoaded', buildGallery, { once: true });
+  function init() {
+    ensureModal();
+    buildGallery();
+  }
 
-  document.addEventListener('astro:after-swap', () => setTimeout(buildGallery, 50));
+  if (document.readyState === 'complete' || document.readyState === 'interactive') init();
+  else document.addEventListener('DOMContentLoaded', init, { once: true });
+
+  document.addEventListener('astro:after-swap', () => setTimeout(init, 50));
 })();
 </script>
 
@@ -152,8 +164,8 @@ For images with higher resolution, exhaustive search is too slow because it scal
 # Image Pyramid (Mipmap)
 
 # Gallery
-<figure>
-<img style="width:50%;" src="/images/dolly_zoom.gif" alt="dolly zoom"/>
-<figcaption class="text-center">dolly zoom</figcaption>
-</figure>
+<!-- Responsive grid gallery -->
+<div class="grid-gallery" aria-label="Gallery">
+  <div class="gg-track"></div>
+</div>
 
