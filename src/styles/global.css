@@ -305,3 +305,134 @@ html { scroll-behavior: smooth; }
 /* Use the theme background variable so the fade matches dark/light mode */
 .horizontal-gallery::before { left: 0; background: linear-gradient(90deg, var(--color-background), transparent); }
 .horizontal-gallery::after { right: 0; background: linear-gradient(270deg, var(--color-background), transparent); }
+
+/* Adjust spacing for H2 headings */
+h2,
+.app-prose h2 {
+  margin-top: 1.25rem; /* space above H2 */
+  margin-bottom: 0.5rem; /* space below H2 */
+  line-height: 1.25;
+}
+
+@media (max-width: 640px) {
+  h2,
+  .app-prose h2 {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.side-by-side-arrows {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  flex-wrap: nowrap;
+  margin: 1rem 0;
+}
+
+.ssa-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(220px, 22vw);
+  margin-top: 0rem;
+  margin-bottom: 0.5rem;
+  border: none !important; 
+}
+.ssa-item img {
+  width: 100%;
+  height: auto;
+  max-height: 220px;
+  object-fit: cover;
+  border-radius: 0px;
+  border: none !important; 
+}
+.ssa-item figcaption {
+  margin-top: 0.35rem;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.ssa-arrow {
+  font-size: 1.25rem;
+  color: var(--color-muted);
+  padding: 0 0.5rem;
+}
+
+@media (max-width: 640px) {
+  .side-by-side-arrows { gap: 0.5rem; }
+  .ssa-item { width: 36vw; }
+  .ssa-item img { max-height: 160px; }
+}
+
+/* Grid gallery */
+.grid-gallery {
+  width: 100%;
+}
+.grid-gallery .gg-track {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.75rem;
+  align-items: start;
+}
+.grid-gallery .gg-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.grid-gallery .gg-media {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 6px;
+}
+.grid-gallery .gg-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.grid-gallery .gg-caption {
+  font-size: 0.85rem;
+  color: var(--color-muted);
+  text-align: center;
+}
+
+/* Modal / lightbox */
+.gg-modal {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(0,0,0,0.6);
+  z-index: 60;
+  padding: 2rem;
+}
+.gg-modal[hidden] { display: none; }
+.gg-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+.gg-figure {
+  max-width: 90vw;
+  max-height: 90vh;
+}
+.gg-figure img {
+  width: 100%;
+  height: auto;
+  display: block;
+  max-height: 80vh;
+}
+.gg-caption {
+  margin-top: 0.5rem;
+  text-align: center;
+  color: #fff;
+}
