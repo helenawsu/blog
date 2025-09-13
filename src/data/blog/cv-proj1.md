@@ -1,7 +1,7 @@
 ---
 title: "CV Project 1: Image Alignment"
 author: Helena Su
-pubDatetime: 2025-09-11
+pubDatetime: 2025-09-12
 slug: cv-proj1
 featured: false
 draft: false
@@ -161,34 +161,72 @@ description:
 })();
 </script>
 
-Given three seperate color channel images, the goal is to align them properly by searching for the correct alignment vector. A similarity score for each alignment vector is caluclated and the highest score will be selected. The naive method is simply doing an exhaustive search within a  range.
+Given three seperate color channel images, the goal is to align them properly by searching for the correct alignment vector. A similarity score for each alignment vector is caluclated and the highest score will be selected. The naive method is simply doing an exhaustive search within a range.
 
-For images with higher resolution, exhaustive search is too slow because it scales $O(n^2)$ wrt to search range. To optimize the search, I built an image pyramid of progressive level of downscaleness. This way, the search range can be small at each level and gradually refined to the final value.
+For high-resolution images, exhaustive search is too slow since it scales as $O(n^2)$ with respect to the search range. To optimize this, I built an image pyramid with progressively downscaled levels. At each level, the search range remains small and the alignment is gradually refined until the final value is reached.
 
 
 # Single-Scale Alignment
 Single scale alignment works by selecting a range of shift vectors and compare each similarity score. The process is done twice, once aligning green channel to blue channel, twice aligning red channel to blue channel.
 
+
+
+## Similarity Metric
+There are many similarity metric for image alignment. I implemented the normalized cross correlation (NCC). It is a common similarity metric used in signal processing, normalized by vectors' magnitude. Given two vectors $a$ and $b$, the formula is: 
+
+$$ NCC(a,b) = \frac{a \cdot b}{\|a\|\|b\|} $$
+
+ Intuitively, NCC measures the cosine of the angle between the two vectors, with values closer to 1 indicating stronger similarity. Since our image are 2D matrices, each image matrix is flattened to 1D vector first.
+## Search Range
+Picking the correct size of search window required some tuning. One visualization that helped me is the similarity score matrix in the search window. If the search range is big enough, there should be one alignment vector that is noticeably better than any other pixels. Otherwise, the search range should be expanded.
 <!-- two-square images side-by-side: good_range and bad_range -->
 <div class="side-by-side equal">
   <figure>
     <img src="/images/proj1/other/good_range.jpg" alt="Good Range" loading="lazy" />
-    <figcaption class="text-center">Good range</figcaption>
+    <figcaption class="text-center">Good Search Range</figcaption>
   </figure>
 
   <figure>
     <img src="/images/proj1/other/bad_range.jpg" alt="Bad Range" loading="lazy" />
-    <figcaption class="text-center">Bad range</figcaption>
+    <figcaption class="text-center">Bad Search Range (the correct alignment vector is outside of this window)</figcaption>
   </figure>
 </div>
 
-## Similairy Metric
-There are different similarity metric for image alignment. The most common one simply bla bla. However, colors channels may naturally have different levels of value even in the same area. Thus, I calculate the horizontal and vertical gradient by taking the difference across neighboring pixels in the x and y directions. The final scalar score is simply calculated as the sum of two squared gradient matrices.
-## Search Range
-Picking the correct size of search window required some tuning. One visualization that helped me is the similarity score matrix in the search window. If the search range is big enough, there should be one alignment vector that is noticeably better than any other pixels. Otherwise, the search range should be expanded.
-
 # Multi-Scale Alignment
-# Image Pyramid (Mipmap)
+To speed up alignment, a high-resolution image can be downscaled to reduce the search range. The resulting approximate alignment vector is then used as the new search center, allowing the range to be narrowed further. This process forms a recursive algorithm: at each level, single-scale alignment is performed with the help of the approximate vector, and the alignment is progressively refined.
+
+## Image Pyramid (Mipmap)
+To achieve multi-scale alignment, some preprocessing is required. My image pyramid builder generates multiple levels of images, where each level is half the size of the previous one. Each downsampled image is created by averaging every group of four neighboring pixels. The original image is padded so that its dimensions equals the nearest $2^n$, corresponding to the chosen number of levels to ensure integer dimension.
+
+```bash
+downscaled_image = image.reshape(image.shape[0]//2, 2, image.shape[1]//2, 2).mean(axis=(1,3))
+```
+The number of levels is chosen so that the smallest level has dimension of around 250x250. TIF images have dimension over 3000x3000, so 6 levels are generate.
+
+
+<div class="side-by-side-arrows" aria-hidden="false" style="margin-top:0rem;">
+  <figure class="ssa-item">
+    <img src="/images/proj1/other/cathedral_level0.webp" alt="level 1" loading="lazy" />
+    <figcaption>L1 dimension: 392 × 344</figcaption>
+  </figure>
+
+  <div class="ssa-arrow" aria-hidden="true">➜</div>
+
+  <figure class="ssa-item">
+    <img src="/images/proj1/other/cathedral_level1.webp" alt="level 2" loading="lazy" />
+    <figcaption>L2 dimension: 196 × 172</figcaption>
+  </figure>
+
+  <div class="ssa-arrow" aria-hidden="true">➜</div>
+
+  <figure class="ssa-item">
+    <img src="/images/proj1/other/cathedral_level2.webp" alt="level 3" loading="lazy" />
+    <figcaption>L3 dimension: 98 × 86</figcaption>
+  </figure>
+</div>
+
+## Search Range
+The initial search range is set to about 10% of the image height. In the recursive steps, the search range varies between 6 and 20 pixels, depending on the image. Because of aliasing and noise, this range sometimes needs to be significantly larger than 4, the scaling factor between levels.
 
 # Gallery
 <!-- Responsive grid gallery -->
@@ -196,3 +234,31 @@ Picking the correct size of search window required some tuning. One visualizatio
   <div class="gg-track"></div>
 </div>
 
+# Bells and Whistles
+I explored another similarity metric, which is the gradient of the image. I calculate the horizontal and vertical gradient by taking the difference across neighboring pixels in the x and y directions. This act as horizontal and vertical edge detector. The final scalar score is simply calculated as the sum of two squared gradient matrices. It produced finer alignment than the NCC metric.
+```bash
+horizontal_grad = np.diff(img, axis=1)
+vertical_grad = np.diff(img, axis=0)
+score = np.sum((v_grad_blue - v_grad_green)**2) + np.sum((h_grad_blue - h_grad_green)**2)
+```
+
+<div class="side-by-side equal">
+  <figure>
+    <img src="/images/proj1/other/h_gradient.png" alt="Good Range" loading="lazy" />
+    <figcaption class="text-center">Horizontal Gradient of Cathedral</figcaption>
+  </figure>
+
+  <figure>
+    <img src="/images/proj1/other/v_gradient.png" alt="Bad Range" loading="lazy" />
+    <figcaption class="text-center">Vertical Gradient of Cathedral</figcaption>
+  </figure>
+</div>
+
+# Observations
+Most images are easy to align. "self_portrait" is more difficult due to messy backgrounds and indistinctive contours (mostly rocks and blurry grass). Cropping out the black strips on the edges helped.
+
+Moving objects are still inevitably misaligned. This creates a beautiful water surface.
+  <figure>
+    <img src="/images/proj1/other/water.jpg" alt="water" loading="lazy" />
+    <figcaption class="text-center">Colorful water</figcaption>
+  </figure>

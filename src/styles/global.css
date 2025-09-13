@@ -339,9 +339,11 @@ h1,
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  width: 100%;
+  width: auto; /* don't force full width so auto margins can center */
+  max-width: 900px; /* constrain the group so it centers within content */
   flex-wrap: nowrap;
-  margin: 1rem 0;
+  margin: 1rem auto; /* center horizontally */
+  --ssa-caption-space: 2.4rem; /* default reserved space for caption */
 }
 
 .ssa-item {
@@ -353,8 +355,9 @@ h1,
   margin-top: 0rem;
   margin-bottom: 0.5rem;
   border: none !important;
-  padding-bottom: 1.6rem; /* reserve space for absolutely-positioned caption */
+  padding-bottom: var(--ssa-caption-space); /* reserve larger space so caption sits further below image */
 }
+
 .ssa-item img {
   width: 100%;
   height: auto;
@@ -367,7 +370,7 @@ h1,
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  bottom: 0.35rem;
+  bottom: calc(var(--ssa-caption-space) - 1.65rem); /* position caption inside reserved space */
   margin: 0;
   font-size: 0.85rem;
   text-align: center;
@@ -381,13 +384,15 @@ h1,
   font-size: 1.25rem;
   color: var(--color-foreground);
   padding: 0 0.5rem;
+  /* shift arrow up by half the reserved caption space so it visually centers to the image */
+  transform: translateY(calc(-0.5 * var(--ssa-caption-space)));
 }
 
 @media (max-width: 640px) {
-  .side-by-side-arrows { gap: 0.5rem; }
-  .ssa-item { width: 36vw; padding-bottom: 1.2rem; }
+  .side-by-side-arrows { gap: 0.5rem; --ssa-caption-space: 1.6rem; }
+  .ssa-item { width: 36vw; }
   .ssa-item img { max-height: 160px; }
-  .ssa-item figcaption { bottom: 0.25rem; }
+  .ssa-item figcaption { bottom: calc(var(--ssa-caption-space) - 1.25rem); }
 }
 
 /* Grid gallery */
