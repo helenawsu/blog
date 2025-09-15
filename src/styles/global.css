@@ -445,6 +445,20 @@ h1,
   text-align: center;
 }
 
+/* clickable cursors and focus styles for gallery items */
+.grid-gallery .gg-item,
+.grid-gallery .gg-media,
+.grid-gallery .gg-media img {
+  cursor: pointer;
+}
+
+/* visible focus for keyboard users */
+.grid-gallery .gg-item:focus-within,
+.grid-gallery .gg-item:focus {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
 /* Modal / lightbox */
 .gg-modal {
   position: fixed;
