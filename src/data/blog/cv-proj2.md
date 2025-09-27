@@ -27,6 +27,7 @@ description:
     <figcaption class="text-center">mushroom</figcaption>
   </figure>
 </div>
+
 This project explores fundamental image processing techniques with filters and frequency-domain methods, such as convolution and its application on blurring, sharpening, and edge detection. Several creative technique such as hybrid images multi-resolution blending (make an oraple) are explored.
 
 # Convolution
