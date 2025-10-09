@@ -232,16 +232,19 @@ Intereseting to note, the game camera apply heavy distortion at the edge of the 
     <figcaption class="text-center">Void Space Station</figcaption>
   </figure>
 </div>
-<div style="display: flex; justify-content: center;">
-  <figure style="width: 70%;margin-top: 0.5rem">
+
+<div style="display: flex; gap: 1rem; justify-content: center;">
+  <figure style="width: 50%;margin-top: 0.5rem">
     <img src="/images/proj3/mosaic_vosskhead.jpg" alt="original cat yawning"/>
     <figcaption class="text-center">Big Head Vossk Space Station</figcaption>
   </figure>
-  <figure style="width: 70%;margin-top: 0.5rem">
-    <img src="/images/proj3/mosaic_vosskleg.jpg" alt="original cat yawning"/>
-    <figcaption class="text-center">Long Leg Vossk Space Station</figcaption>
+  
+  <figure style="width: 50%; margin-top: 0.5rem">
+    <img src="/images/proj3/mosaic_vosskleg.jpg" alt="original mushroom"/>
+    <figcaption class="text-center">Long Leg Vossk Space Station (bottom)</figcaption>
   </figure>
 </div>
+
 <div style="display: flex; gap: 1rem; justify-content: center;">
   <figure style="width: 50%;margin-top: 0.5rem">
     <img src="/images/proj3/vossktop.jpg" alt="original cat yawning"/>
@@ -254,7 +257,7 @@ Intereseting to note, the game camera apply heavy distortion at the edge of the 
   </figure>
 </div>
 <div style="display: flex; justify-content: center;">
-<figure style="width: 70%;margin-top: 0.5rem">
+<figure style="width: 100%;margin-top: 0.5rem">
     <img src="/images/proj3/mosaic_night.webp" alt="original cat yawning"/>
     <figcaption class="text-center">Night Street</figcaption>
   </figure>
