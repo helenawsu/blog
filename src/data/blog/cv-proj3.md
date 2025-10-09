@@ -215,7 +215,7 @@ We can stitch together the images now that they are in the same perspective. To 
 $$
 out = \frac{w_1 in_1 + w_2 in_2}{w_1 + w_2}
 $$
-
+Intereseting to note, the game camera apply heavy distortion at the edge of the view, which cause drastic perspective transform.
 
   <figure style="width: 100%;margin-top: 0.5rem">
     <img src="/images/proj3/mosaic_void23.jpg" alt="original cat yawning"/>
