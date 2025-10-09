@@ -337,116 +337,116 @@ To prepare the subband pyramid for multi-resolution blending, we first build an 
 
 Note that I implemented pyramid instead of stack because it would save compute and storage as we downsample the image.
 
-<div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+<div style="display: flex; gap: 0; justify-content: center; flex-wrap: wrap; max-width: 100%; overflow-x: hidden;">
   <!-- Row 0: Original images -->
-  <figure style="width: 30%; margin: 0;">
-    <img src="/images/proj2/oraple/apple.jpeg" alt="apple original"/>
+  <figure style="width: 33.33%; margin: 0; min-width: 0;">
+    <img src="/images/proj2/oraple/apple.jpeg" alt="apple original" style="width: 100%; height: auto;"/>
     <figcaption class="text-center">apple original</figcaption>
   </figure>
   
-  <figure style="width: 30%; margin: 0;">
-    <img src="/images/proj2/oraple/orange.jpeg" alt="orange original"/>
+  <figure style="width: 33.33%; margin: 0; min-width: 0;">
+    <img src="/images/proj2/oraple/orange.jpeg" alt="orange original" style="width: 100%; height: auto;"/>
     <figcaption class="text-center">orange original</figcaption>
   </figure>
   
-  <figure style="width: 30%; margin: 0;">
-    <img src="/images/proj2/oraple/oraple_bad.webp" alt="oraple result"/>
+  <figure style="width: 33.33%; margin: 0; min-width: 0;">
+    <img src="/images/proj2/oraple/oraple_bad.webp" alt="oraple result" style="width: 100%; height: auto;"/>
     <figcaption class="text-center">oraple (naive blending)</figcaption>
   </figure>
   
   <!-- Row 1: Level 0 -->
-  <figure style="width: 30%; margin: 0;">
-    <img src="/images/proj2/oraple/apple_laplacian0.webp" alt="apple laplacian level 0"/>
+  <figure style="width: 33.33%; margin: 0; min-width: 0;">
+    <img src="/images/proj2/oraple/apple_laplacian0.webp" alt="apple laplacian level 0" style="width: 100%; height: auto;"/>
     <figcaption class="text-center">apple laplacian level 0</figcaption>
   </figure>
   
-  <figure style="width: 30%; margin: 0;">
-    <img src="/images/proj2/oraple/orange_laplacian0.webp" alt="orange laplacian level 0"/>
+  <figure style="width: 33.33%; margin: 0; min-width: 0;">
+    <img src="/images/proj2/oraple/orange_laplacian0.webp" alt="orange laplacian level 0" style="width: 100%; height: auto;"/>
     <figcaption class="text-center">orange laplacian level 0</figcaption>
   </figure>
   
-  <figure style="width: 30%; margin: 0;">
-    <img src="/images/proj2/oraple/oraple_laplacian0.webp" alt="oraple laplacian level 0"/>
+  <figure style="width: 33.33%; margin: 0; min-width: 0;">
+    <img src="/images/proj2/oraple/oraple_laplacian0.webp" alt="oraple laplacian level 0" style="width: 100%; height: auto;"/>
     <figcaption class="text-center">oraple laplacian level 0</figcaption>
   </figure>
   
   <!-- Row 2: Level 1 -->
-  <figure style="width: 30%; margin: 0;">
-    <img src="/images/proj2/oraple/apple_laplacian1.webp" alt="apple laplacian level 1"/>
+  <figure style="width: 33.33%; margin: 0; min-width: 0;">
+    <img src="/images/proj2/oraple/apple_laplacian1.webp" alt="apple laplacian level 1" style="width: 100%; height: auto;"/>
     <figcaption class="text-center">apple laplacian level 1</figcaption>
   </figure>
   
-  <figure style="width: 30%; margin: 0;">
-    <img src="/images/proj2/oraple/orange_laplacian1.webp" alt="orange laplacian level 1"/>
+  <figure style="width: 33.33%; margin: 0; min-width: 0;">
+    <img src="/images/proj2/oraple/orange_laplacian1.webp" alt="orange laplacian level 1" style="width: 100%; height: auto;"/>
     <figcaption class="text-center">orange laplacian level 1</figcaption>
   </figure>
   
-  <figure style="width: 30%; margin: 0;">
-    <img src="/images/proj2/oraple/oraple_laplacian1.webp" alt="oraple laplacian level 1"/>
+  <figure style="width: 33.33%; margin: 0; min-width: 0;">
+    <img src="/images/proj2/oraple/oraple_laplacian1.webp" alt="oraple laplacian level 1" style="width: 100%; height: auto;"/>
     <figcaption class="text-center">oraple laplacian level 1</figcaption>
   </figure>
   
   <!-- Row 3: Level 2 -->
-  <figure style="width: 30%; margin: 0;">
-    <img src="/images/proj2/oraple/apple_laplacian2.webp" alt="apple laplacian level 2"/>
+  <figure style="width: 33.33%; margin: 0; min-width: 0;">
+    <img src="/images/proj2/oraple/apple_laplacian2.webp" alt="apple laplacian level 2" style="width: 100%; height: auto;"/>
     <figcaption class="text-center">apple laplacian level 2</figcaption>
   </figure>
   
-  <figure style="width: 30%; margin: 0;">
-    <img src="/images/proj2/oraple/orange_laplacian2.webp" alt="orange laplacian level 2"/>
+  <figure style="width: 33.33%; margin: 0; min-width: 0;">
+    <img src="/images/proj2/oraple/orange_laplacian2.webp" alt="orange laplacian level 2" style="width: 100%; height: auto;"/>
     <figcaption class="text-center">orange laplacian level 2</figcaption>
   </figure>
   
-  <figure style="width: 30%; margin: 0;">
-    <img src="/images/proj2/oraple/oraple_laplacian2.webp" alt="oraple laplacian level 2"/>
+  <figure style="width: 33.33%; margin: 0; min-width: 0;">
+    <img src="/images/proj2/oraple/oraple_laplacian2.webp" alt="oraple laplacian level 2" style="width: 100%; height: auto;"/>
     <figcaption class="text-center">oraple laplacian level 2</figcaption>
   </figure>
   
   <!-- Row 4: Level 3 -->
-  <figure style="width: 30%; margin: 0;">
-    <img src="/images/proj2/oraple/apple_laplacian3.webp" alt="apple laplacian level 3"/>
+  <figure style="width: 33.33%; margin: 0; min-width: 0;">
+    <img src="/images/proj2/oraple/apple_laplacian3.webp" alt="apple laplacian level 3" style="width: 100%; height: auto;"/>
     <figcaption class="text-center">apple laplacian level 3</figcaption>
   </figure>
   
-  <figure style="width: 30%; margin: 0;">
-    <img src="/images/proj2/oraple/orange_laplacian3.webp" alt="orange laplacian level 3"/>
+  <figure style="width: 33.33%; margin: 0; min-width: 0;">
+    <img src="/images/proj2/oraple/orange_laplacian3.webp" alt="orange laplacian level 3" style="width: 100%; height: auto;"/>
     <figcaption class="text-center">orange laplacian level 3</figcaption>
   </figure>
   
-  <figure style="width: 30%; margin: 0;">
-    <img src="/images/proj2/oraple/oraple_laplacian3.webp" alt="oraple laplacian level 3"/>
+  <figure style="width: 33.33%; margin: 0; min-width: 0;">
+    <img src="/images/proj2/oraple/oraple_laplacian3.webp" alt="oraple laplacian level 3" style="width: 100%; height: auto;"/>
     <figcaption class="text-center">oraple laplacian level 3</figcaption>
   </figure>
   
   <!-- Row 5: Level 4 -->
-  <figure style="width: 30%; margin: 0;">
-    <img src="/images/proj2/oraple/apple_laplacian4.webp" alt="apple laplacian level 4"/>
+  <figure style="width: 33.33%; margin: 0; min-width: 0;">
+    <img src="/images/proj2/oraple/apple_laplacian4.webp" alt="apple laplacian level 4" style="width: 100%; height: auto;"/>
     <figcaption class="text-center">apple laplacian level 4</figcaption>
   </figure>
   
-  <figure style="width: 30%; margin: 0;">
-    <img src="/images/proj2/oraple/orange_laplacian4.webp" alt="orange laplacian level 4"/>
+  <figure style="width: 33.33%; margin: 0; min-width: 0;">
+    <img src="/images/proj2/oraple/orange_laplacian4.webp" alt="orange laplacian level 4" style="width: 100%; height: auto;"/>
     <figcaption class="text-center">orange laplacian level 4</figcaption>
   </figure>
   
-  <figure style="width: 30%; margin: 0;">
-    <img src="/images/proj2/oraple/oraple_laplacian4.webp" alt="oraple laplacian level 4"/>
+  <figure style="width: 33.33%; margin: 0; min-width: 0;">
+    <img src="/images/proj2/oraple/oraple_laplacian4.webp" alt="oraple laplacian level 4" style="width: 100%; height: auto;"/>
     <figcaption class="text-center">oraple laplacian level 4</figcaption>
   </figure>
   
   <!-- Row 6: Level 5 -->
-  <figure style="width: 30%; margin: 0;">
-    <img src="/images/proj2/oraple/apple_laplacian5.webp" alt="apple laplacian level 5"/>
+  <figure style="width: 33.33%; margin: 0; min-width: 0;">
+    <img src="/images/proj2/oraple/apple_laplacian5.webp" alt="apple laplacian level 5" style="width: 100%; height: auto;"/>
     <figcaption class="text-center">apple laplacian level 5</figcaption>
   </figure>
   
-  <figure style="width: 30%; margin: 0;">
-    <img src="/images/proj2/oraple/orange_laplacian5.webp" alt="orange laplacian level 5"/>
+  <figure style="width: 33.33%; margin: 0; min-width: 0;">
+    <img src="/images/proj2/oraple/orange_laplacian5.webp" alt="orange laplacian level 5" style="width: 100%; height: auto;"/>
     <figcaption class="text-center">orange laplacian level 5</figcaption>
   </figure>
   
-  <figure style="width: 30%; margin: 0;">
-    <img src="/images/proj2/oraple/oraple_laplacian5.webp" alt="oraple laplacian level 5"/>
+  <figure style="width: 33.33%; margin: 0; min-width: 0;">
+    <img src="/images/proj2/oraple/oraple_laplacian5.webp" alt="oraple laplacian level 5" style="width: 100%; height: auto;"/>
     <figcaption class="text-center">oraple laplacian level 5</figcaption>
   </figure>
 </div>
