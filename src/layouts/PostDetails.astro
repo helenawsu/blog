@@ -356,8 +356,12 @@ const nextPost =
         const a = document.createElement('a');
         a.href = `#${h.id}`;
         a.className = 'toc-link';
-        a.textContent = h.textContent || '';
-
+        // Remove trailing # and whitespace for h2 and h3
+        let headingText = h.textContent || '';
+        if (level === 2 || level === 3) {
+          headingText = headingText.replace(/#+\s*$/, '').trim();
+        }
+        a.textContent = headingText;
         li.appendChild(a);
         stacks[stacks.length - 1].appendChild(li);
       });
