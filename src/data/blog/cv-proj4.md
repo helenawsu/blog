@@ -8,7 +8,7 @@ draft: false
 tags:
   - Computer Vision
 description:
-  perspective transforms, warping
+  nerf, volumetric rendering, cube marching
 ---
 
 <div style="display: flex; gap: 1rem; justify-content: center;">
@@ -20,7 +20,7 @@ description:
   </div>
 
 # Overview
-In this project, we build and train a nerf from sratch with custom dataset. The process is divided into three parts: camera calibration and image capture, 2d nerf, and 3d nerf.
+This projects and train a nerf from sratch with custom dataset. The process includes camera calibration using ArUco markers, training a warm-up 2D image field, and implementing a full 3D NeRF with optimization techniques like prioritizing object pixels and high-density ray segments. Addtionally, we explore converting the implicit NeRF representation into an explicit mesh with cube marching.
 
 <iframe
   src="/plotly/volrend_trisurf_step0-5.html"
@@ -30,10 +30,15 @@ In this project, we build and train a nerf from sratch with custom dataset. The 
 ></iframe>
 
 # Setup
+The transformation from world coordinates to screen (pixel) coordinates is defined as:
+$$
+x_{screen} = K\ [R | t]\ X_{world} 
+$$
+
+For nerf training, we need to calculate world coordinate of given screen coordinate and camera extrinsics rotation matrix and translation vector. We begin by estimating the camera intrinsics K. Using these intrinsics, we then compute the extrinsics—R and t—for each image. Combining the intrinsics with the extrinsics yields the world-to-camera matrix, and its inverse gives the camera-to-world matrix used by NeRF.
 
 ## Camera Calibration 
-
-Camera intrinsics is needed to calculate camera extrinsics, which projects screen coordinates to world coordinate. Intrinsics matrix (K matrix) contains focal length, image center and scale. To achieve this, 30 pictures of 6 aruco markers with various distance and angles are taken with an iPhone 12. Here are some examples of the captured images:
+ In this section, we are calculating camera intrinsics (K matrix) which contains focal length, image center and scale. To achieve this, 30 pictures of 6 aruco markers with various distance and angles are taken with an iPhone 12. Here are some examples of the captured images:
 
 <div style="display: flex; gap: 1rem; justify-content: center;">
   <figure style="width: 25%;margin-top: 0.5rem">
@@ -76,7 +81,7 @@ This process involves placing my desired object—Keys of the Void from Honkai I
   </figure>
 </div>
 
-The camera-to-world matrix for each image's camera extrinsics is then calculated. The calculation use `cv2.aruco.detectMarkers` again to detect screen coordinates of aruco markers and feed them into `cv2.solvePnP` to find the rotation and translation vector of camera in each image. It is used to build the c2w matrix. R matrix is converted from rvec with `cv2.Rodrigues`.
+Next, we compute the camera-to-world (c2w) matrix for each image. These 2D points, together with the known camera intrinsics, are passed to `cv2.solvePnP`, which estimates the camera’s rotation and translation for each image. The rotation vector returned by solvePnP is then converted to a rotation matrix using `cv2.Rodrigues`. Together, the rotation matrix and translation vector form the extrinsics, which we combine to construct the final c2w matrix.
 
 $$
 \mathbf{T}_{cw} = \left[ \mathbf{R} | \mathbf{t} \right] = \begin{pmatrix}
@@ -197,7 +202,12 @@ Some training progressions:
 
 # 3D Neural Radiance Field
 
-Our training dataset contain a list of images and their corresponding camera-to-world (c2w) transformation matrices. We need to transform pixel data, screen coordinate $(u, v)$ and color, to ray origin and ray direction. Ray origin is the world coordinate of camera of each image, which is c2w matrices with homogenous dimension dropped. Ray direction is the normalized (pixel_world_coordinate - camera_world_coordinate) vector. We then batch pairs of ray origin and ray direction into the model. The model's architecture is as follows. 
+Our training dataset consists of images and their corresponding camera-to-world (c2w) transformation matrices. To train the model, we convert each pixel—defined by its screen coordinates $(u,v)$ and color—into a ray origin and a ray direction.
+
+The ray origin is simply the camera position in world coordinates, obtained from the c2w matrix (after removing the homogeneous coordinate).
+The ray direction is computed by transforming the pixel into world coordinates and taking the normalized vector from the camera origin to this 3D point.
+
+These ray origins and directions are then batched and fed into the model. The model architecture is shown below.
 
 <div style="display: flex; gap: 1rem; justify-content: center;">
 
@@ -216,7 +226,9 @@ Our training dataset contain a list of images and their corresponding camera-to-
   </div>
 
 ## Volumetric Rendering
-Nerf learns the density and rgb at each continous point in the space, as oppose to explicit surface representation. This volumetric representation means that to render the final color at one position at one view direction, we need to integrate all the points on that ray (clipped by a bounding box) using alpha blending. For practicality, each ray is divided into many small segments to approximate the integral. This means in addition to sampling camera rays, we also need to segment each ray into many samples. The dimension of training input is thus (batch size, sample size, 3).
+NeRF learns the density and RGB color at every continuous point in space, rather than modeling explicit surfaces. Because of this volumetric representation, rendering a pixel’s final color from a given view direction requires integrating the contributions of all points along the corresponding camera ray (within a bounded region), using alpha blending.
+
+In practice, this integral is approximated by dividing each ray into many small segments. Thus, for every sampled camera ray, we also generate a set of sample points along that ray. As a result, the training input has the shape: (batch size, sample size, 3) representing the 3D coordinates of each sampled point.
 
 <div style="display: flex; gap: 1rem; justify-content: center;">
 
@@ -226,12 +238,12 @@ Nerf learns the density and rgb at each continous point in the space, as oppose 
   </figure>
   </div>
 
-The final color can be seen as the sum of color contribution from each ray segment $i$. The color of each segment is then calculated as transmitance (how much light is left) times opacity times raw rgb color.
+The final pixel color can be interpreted as the sum of the color contributions from each ray segment $i$. The contribution of a single segment is computed as the transmittance (the remaining light after passing through previous segments) multiplied by the segment’s opacity and its predicted RGB color.
 $$
 C = \sum_{j=near}^{j=far} T_i\cdot \alpha_i \cdot rgb_{raw}
 $$
 
-`torch.cumprod` is used to efficiently calculate transmitance T of each segment. The final weight (opacity) is calculated as follows. 
+`torch.cumprod` is used to efficiently calculate transmitance T of each segment. The final weight (or effective opacity) is calculated as follows. 
 $$
 T_i =  \prod_{j=near}^{j=i} (1 - \alpha_j)
 $$
@@ -300,16 +312,17 @@ As a small note: usually step size is disturbed so that the model learns contino
 ></iframe> -->
 
 ## Optimization
-In comparison to the Lego dataset, there are a few issues in the my dataset that makes trianing much slower. First, the majority of the image is background but the object should be focused. Second, my object is long on one end. This means my bounding box and loose and naive uniform step size sampling in ray will most likely hit empty space. To address these issues, two improvements are made in the sampling methods.
+Compared to the Lego dataset, my dataset presents a few challenges that make training slower. First, most of each image consists of background, while only a small region contains the object of interest. Second, the object itself is long, which forces the bounding box to be large; with a uniform step size along each ray, many sampled points end up in empty space. To address these issues, I introduced two improvements to the sampling method.
 
 ### 1. priotize object pixels
 
-My train images are preprocessed with SAM to segment the object and mask the background black. This allows easy identification of valid pixels (those aren't pure black). When sampling image pixels, object pixels have a higher probability of being sampled. During training, I set the object ratio to be 0.9. If object ratio is too high, floats start to appear since the model learn too little about background.
+My training images are preprocessed with SAM to segment the object and mask the background in black. This makes it easy to identify valid pixels (those that are not pure black). When sampling pixels during training, object pixels are given a higher probability of being selected. I use an object sampling ratio of 0.9. If this ratio is set too high, floating artifacts begin to appear because the model learns too little about the background.
 
 ### 2. prioritize high density ray segments
-As opposed to sample uniformly along ray, points with higher density are more likely to be picked. This avoids wasting samples points on blank space.
 
-To implement this optimization, two models are being trained at the same time. One is a coarse model with 64 number of samples per ray, and the other is the actual fine model with 256+64 samples per ray. Every epoch, the output of the coarse model is used to calculate final contribution of each ray segment with volrend. The calculated weights is then passed into a new `sample_along_rays_priority` method .
+Instead of sampling points uniformly along a ray, points with higher predicted density are given a higher probability of being selected. This helps avoid wasting samples on empty space.
+
+To implement this optimization, two models are trained simultaneously. The first is a coarse model with 64 samples per ray, and the second is the fine model, which uses 256 + 64 samples per ray. In each epoch, the coarse model’s output is used to compute the contribution of each ray segment via volrend. The resulting weights are then fed into a new method, `sample_along_rays_priority`, to guide the fine sampling process.
 
 ```bash
 ...
@@ -358,7 +371,7 @@ The model is trained for 4 hours on A100 with Google Colab, with 15k epochs, bat
   </figure>
   </div>
 
-Note the dip in psnr at epoch 5000. I increased the probability of sampling object pixels from 0.75 to 0.9 at that epoch. The real PNSR should be 1-2 db higher than the graph since the psnr is calculated mostly on the object pixels.
+Note the dip in PSNR at epoch 5000. At that point, I increased the probability of sampling object pixels from 0.75 to 0.9. The actual PSNR is likely 1–2 dB higher than shown in the graph, since the PSNR is calculated mostly over object pixels.
 
 <div style="display: flex; gap: 1rem; justify-content: center;">
 
@@ -368,13 +381,13 @@ Note the dip in psnr at epoch 5000. I increased the probability of sampling obje
   </figure>
   </div>
 
-Comparing the performance of coarse and fine model gives some insights into the benefits of this two model method. Both the optimize sample and higher sampling rate contribute to the increase in psnr performance, of around 1.5 db. In addition to the offset, We can also observe the trend that the gap of psnr between to models is increasing, the psnr fine is leanring faster than the coarse one.
+Comparing the performance of the coarse and fine models provides insight into the benefits of the two-model approach. Both optimized sampling and the higher sampling rate contribute to an increase in PSNR of roughly 1.5 dB. In addition, we can observe that the gap in PSNR between the two models is widening, indicating that the fine model is learning faster than the coarse model.
 
 # Cube Marching
 
-Another area to explore is converting implicit representation to explicit representation. Cube marching is such an algorithm that takes in a level set (input position, output density), such as a voxel and generates a mesh. 
+Another area worth exploring is converting an implicit representation into an explicit one. Marching Cubes is an algorithm that does this: given a level set (input position, output density), such as a voxel grid, it generates a mesh.
 
-[This link](https://www.cs.carleton.edu/cs_comps/0405/shape/marching_cubes.html) provides an explanation of the algorithm, but breifly given 3d grid of density and a isovalue threshold, for each grid point, if the density at a the 8 corners of the cube is higher than the threshold, the space is occupied by volume. However if not all 8 corners are occupied, a surface is generated with the following configuration. The configuration is stored in lookup table, thus the algorithm is fast.
+[This link](https://www.cs.carleton.edu/cs_comps/0405/shape/marching_cubes.html) provides a good explanation, but briefly: given a 3D grid of densities and an isovalue threshold, each cube defined by eight neighboring grid points is evaluated. If all eight corners have densities above the threshold, the cube is considered fully occupied. If not all corners are occupied, the algorithm generates a surface within the cube according to a predefined configuration. These configurations are stored in a lookup table, which makes the algorithm fast and efficient.
 
 
 <div style="display: flex; gap: 1rem; justify-content: center;">
@@ -385,7 +398,9 @@ Another area to explore is converting implicit representation to explicit repres
   </figure>
   </div>
 
-A step size of 0.5 is used to generate the 3d grid coordinate. Since there is no view direction in the mesh world, view direction is approximated as grid coordinate - object center. The 3d grid coordinates is then queried into the trained model. A visualization of the 3d grid density output is as follows (note that a square cube has been quried, but since there is a filter of > 1.25 in the visualizaion), only the model part is shown.
+A step size of 0.5 is used to generate the 3D grid coordinates. Since there is no explicit view direction in the mesh space, the view direction is approximated as the vector from the object center to each grid point. The 3D grid coordinates are then fed into the trained model.
+
+A visualization of the resulting 3D grid densities is shown below. Note that although a cubic grid was queried, only regions with density greater than 1.25 are displayed, so the visualization highlights the object itself.
 
 <iframe
   src="/plotly/final_density_cloud.html"
@@ -420,7 +435,13 @@ A step size of 0.5 is used to generate the 3d grid coordinate. Since there is no
   </div>
 
 ## Coloring
-Two methods of coloring is explored. One is direct vertex look up, the second is volrend. Given the mesh data and the 3d color grid from the previous pass, the color of the vertexcan be picked by looking up the nearest neighbor's color in the color grid. Volrend involes querying the model again with the full volrend pass with vertex as the ray origin towards the object center. The second method is much slower. Volrend is more accurate but much slower than direct look up. Neither is accurate because the view direction is approximated. 
+Two methods for coloring the mesh were explored. The first is direct vertex lookup, and the second is volumetric rendering (volrend). The color of each face is calculated by averaging the colors of its three vertices.
+
+In the direct lookup method, given the mesh and the 3D color grid generated in the previous step, the color of each vertex is assigned by finding the nearest neighbor in the color grid.
+
+The volrend method, on the other hand, involves querying the model again: each vertex is treated as a ray origin pointing toward the object center, and the full volumetric rendering pass is performed. This method is more accurate but significantly slower than direct lookup.
+
+Note that neither method is perfectly accurate, since the view direction is only approximated.
 
   <div style=" display: flex; gap: 1rem; justify-content: center;">
     <figure style="width: 50%;margin-top: 0.5rem; margin-bottom:0rem">
