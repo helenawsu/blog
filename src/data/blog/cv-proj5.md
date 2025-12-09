@@ -12,6 +12,20 @@ description:
 ---
 
 # Overview
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; width: 100%; max-width: 1100px; margin: 0.5rem auto; align-items: start;">
+  <figure style="margin:0.5rem">
+    <img src="/images/proj5/proj5b/final_calligraphy/overview0.jpg" alt="wxz epoch 10" style="width:100%;height:auto;"/>
+    <figcaption class="text-center">shz (宋徽宗) calligraphy, top: generated, bottom: samples</figcaption>
+  </figure>
+
+
+  <figure style="margin:0.5rem">
+    <img src="/images/proj5/proj5b/final_calligraphy/overview1.jpg" alt="wxz real" style="width:100%;height:auto;"/>
+    <figcaption class="text-center">wxz (王羲之) calligraphy, top: generated, bottom: samples</figcaption>
+  </figure>
+</div>
+
+This project explores image generation and editing using diffusion models, focusing on both DeepFloyd’s pretrained denoising U-Net and custom flow-matching models built from scratch. Methods are applied to generate hand-written digits and Chinese calligraphy.
 
 # Diffusion Model
 
@@ -816,6 +830,8 @@ I picked four famous chinese calligrapher, 王羲之 (wxz), 于右任(yyr), 范�
 ## character structure guide
 
 Obviously, the model needs some structural guidance on how to write the Chinese characters. My first approach was to imprint a bit of a standard font structure into the noisy input image. To extract the actual characters from the calligraphy font, I used the Python library `easyocr` to detect and label them, and then rendered the corresponding standard font using `simsun.ttc` downloaded from web.
+
+This shifts the model’s objective from generating characters from pure noise to transforming a standard-font structure into a calligraphic style.
 
 <figure style="width: 50%; margin: 0.5rem auto;">
     <img src="/images/proj5/proj5b/guidedinput.jpg" alt="sunset 500" style="display:block; margin:0 auto; max-width:100%; height:auto;"/>
