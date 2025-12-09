@@ -870,7 +870,7 @@ To ensure the model learns how to use the structural hints, the training loop pr
   </figure>
   <figure style="margin:0">
     <img src="/images/proj5/shz_test_guided.png" alt="shz epoch 10" style="width:100%;height:auto;"/>
-    <figcaption class="text-center">generated wxz with structure hints trained test data</figcaption>
+    <figcaption class="text-center">generated wxz with structure hints test data</figcaption>
   </figure>
 
 
@@ -880,7 +880,7 @@ To ensure the model learns how to use the structural hints, the training loop pr
   </figure>
   <figure style="margin:0">
     <img src="/images/proj5/wxz_test.png" alt="shz real" style="width:100%;height:auto;"/>
-    <figcaption class="text-center">generated wxz without structure hints trained test data</figcaption>
+    <figcaption class="text-center">generated wxz without structure hints  test data</figcaption>
   </figure>
 </div>
 
