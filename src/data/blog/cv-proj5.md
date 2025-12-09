@@ -787,7 +787,7 @@ We can train the flow matching model on the
 
 ## generating calligrpahyer's scribbles
 
-I picked four famous chinese calligrapher, 王羲之 (wxz), 于右任(yyr), 范文强(fwq), 宋徽宗(shz), and traind the model four times on each of their calligraphy. Since there is no conditioning, the generated samples look like scribbles / texture that has the touch of strokes but no structure whatsover.
+I picked four famous chinese calligrapher, 王羲之 (wxz), 于右任(yyr), 范文强(fwq), 宋徽宗(shz), and trained the model separately on each of their calligraphy styles. Without any structural conditioning, the generated outputs resemble scribbles or textures: they capture the brushstroke style but lack recognizable character structure.
 
 <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; width: 100%; max-width: 1100px; margin: 0.5rem auto; align-items: start;">
   <figure style="margin:0">
