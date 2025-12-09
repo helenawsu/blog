@@ -3,7 +3,7 @@ title: "CV Project 4: Neural Radiance Field"
 author: Helena Su
 pubDatetime: 2025-11-17
 slug: cv-proj4
-featured: false
+featured: True
 draft: false
 tags:
   - Computer Vision
