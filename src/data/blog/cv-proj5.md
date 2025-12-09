@@ -783,7 +783,7 @@ To get rid of the scheduler, I decrease the learning rate to 1e-4 which works we
 
 # Make AI Write Chinese Calligraphy
 We can train the flow matching model on the 
-[chinese calligraphy dataset](https://www.kaggle.com/datasets/yuanhaowang486/chinese-calligraphy-styles-by-calligraphers/data). The training parameters are the same as in the MNIST section, except the hidden dimension is increased to 256 and epoch 10. Training for 10 epochs takes approximately 2 minutes on an A100 GPU.
+[chinese calligraphy dataset](https://www.kaggle.com/datasets/yuanhaowang486/chinese-calligraphy-styles-by-calligraphers/data). Each calligrapher has around 5k training imges and 1k testing images. The training parameters are the same as in the MNIST section, except the hidden dimension is increased to 256 and epoch 5. Training for 5 epochs takes approximately 2 minutes on an A100 GPU.
 
 ## generating calligrpahyer's scribbles
 
