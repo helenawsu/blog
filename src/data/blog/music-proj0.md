@@ -72,16 +72,68 @@ The following table demonstrate the effect with and without bass stability.
 
 # Tension Progression
 
-There are many specific musical theory and heuristic on the structure of harmonic progression  
+There are many specific musical theory and heuristic on the structure of harmonic progression but little are frequency perspective. The motivation is no matter what genre or culture or scale, there has to be a rise and fall in tension. For example, there often is a increase in tension in the begining and a resolution to home at the end. 
+
+## distance from home
+the progression of tension is not only in terms of dissonance within the chord, it is also percieved through distance from home key. For example, V is further away than I from home root note even though both chords are the same major chord. 
+
+To take this into account, tension of a chord in the context of harmonic progression is rqa of three notes plus the home note played together at same time, with an amplitude boost on the home note. This ensures chords closely related to the home note is rewarded and have higher rqa.
+
+| Roman | Type | Notes | RQA(alone) | RQA(with home) | Norm RQA with home & bass |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **I** | Major | C3-E3-G3 | 0.011 | 0.018 | 1.000 |
+| **IV** | Major | F3-A3-C3 | 0.013 | 0.024 | 0.955 |
+| **i** | minor | C3-D#3-G3 | 0.003 | 0.017 | 0.936 |
+| **iv** | minor | F3-G#3-C3 | 0.001 | 0.015 | 0.600 |
+| **ii** | minor | D3-F3-A3 | 0.003 | 0.010 | 0.586 |
+| **iii** | minor | E3-G3-B3 | 0.002 | 0.010 | 0.561 |
+| **II** | Major | D3-F#3-A3 | 0.010 | 0.008 | 0.481 |
+| **III** | Major | E3-G#3-B3 | 0.012 | 0.008 | 0.457 |
+| **V** | Major | G3-B3-D3 | 0.012 | 0.011 | 0.442 |
+| **vi** | minor | A3-C3-E3 | 0.002 | 0.011 | 0.442 |
+| **VI** | Major | A3-C#3-E3 | 0.006 | 0.009 | 0.368 |
+| **vii** | minor | B3-D3-F#3 | 0.003 | 0.006 | 0.233 |
+| **VII** | Major | B3-D#3-F#3 | 0.006 | 0.006 | 0.231 |
+| **v** | minor | G3-A#3-D3 | 0.002 | 0.006 | 0.219 |
 
 ## Voice Leading 
+I want to reward smooth voice leading that cause big tension changes. The reason V-I is such an effective resolution is because V is very far from home and I is at home while V-I only has 3 semitone changes.
+
+| Progression | From Tension | To Tension | ΔT | VL Dist | ΔT Rate |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **iii (E3-G3-B3) → I** | 0.439 | 0.000 | -0.439 | 1.0 | -1.756 |
+| **VII (B3-D#3-F#3) → I** | 0.769 | 0.000 | -0.769 | 3.0 | -1.190 |
+| **vi (A3-C3-E3) → I** | 0.558 | 0.000 | -0.558 | 2.0 | -1.117 |
+| **III (E3-G#3-B3) → I** | 0.543 | 0.000 | -0.543 | 2.0 | -1.086 |
+| **v (G3-A#3-D3) → I** | 0.781 | 0.000 | -0.781 | 4.0 | -1.042 |
+| **vii (B3-D3-F#3) → I** | 0.767 | 0.000 | -0.767 | 4.0 | -1.022 |
+| **VI (A3-C#3-E3) → I** | 0.632 | 0.000 | -0.632 | 3.0 | -0.979 |
+| **V (G3-B3-D3) → I** | 0.558 | 0.000 | -0.558 | 3.0 | -0.864 |
+| **iv (F3-G#3-C3) → I** | 0.400 | 0.000 | -0.400 | 2.0 | -0.800 |
+| **II (D3-F#3-A3) → I** | 0.519 | 0.000 | -0.519 | 8.0 | -0.519 |
+| **ii (D3-F3-A3) → I** | 0.414 | 0.000 | -0.414 | 5.0 | -0.498 |
+| **i (C3-D#3-G3) → I** | 0.064 | 0.000 | -0.064 | 1.0 | -0.256 |
+| **IV (F3-A3-C3) → I** | 0.045 | 0.000 | -0.045 | 3.0 | -0.070 |
+
+## real world dataset tension curve
+Now the metric of tension is finally completed and can be used in chord progression. We can analyze how change in progressoin look like using the [CHORDONOMICON](https://arxiv.org/abs/2410.22046) dataset. 4 bar chor dprogerssion is identified and transcribed to the same major. the most popular 5 types of chord progression is displayed here.
+
+<div style="display: flex; gap: 1rem; justify-content: center;">
+
+  <figure style="width: 50%;margin-top: 0.5rem; margin-bottom:0rem">
+    <img src="/images/music/top5_rock.jpg" alt="2D Neural Field Architecture"/>
+    <figcaption class="text-center">top 5 chord progression in rock and their chnage in tension  </figcaption>
+  </figure>
+  </div>
+
+The fluctuation pattern vary a lot; some start near home and wonder out then resolve at the end, some start far away home. This motivates a custom user-input tension curve that the algorithm comforms towards.
 
 # Chord Pallete
 
 The main idea of chord pallete is to limit the optimzier to look at a subset of all possible triads that can be made up in the scale.
 
 # Progression Optimizer
-
+iterate through all possible sequence of 4 chords and find the path that most closely match the provided change in tension curve. Fitting to change in tension instead of offset tension makes things relative and remove bias.
 
 # Other considerations
 ## four note chord?
