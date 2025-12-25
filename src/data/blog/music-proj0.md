@@ -13,17 +13,25 @@ description:
 
 # Overview
 
-Try it out here! https://harmonicgraph.vercel.app/
+Try it out here! https://harmonicgraph.vercel.app/. Users can select a list of arbitrary frequencies as a scale, define a tension curve, and then generate a chord progression!
 
-Harmonizatoin / chord progression accompanies melody and give momuntum to a piece of music. Even though melody pattern differ so much, there seems to be underlying structure seen in common chord progression. much music theory and heuristic exist to descfibes the structure needed to produce emotional momentum, but this project attempts to uncover the sturcture through pure computatoinal / physical / frequency analysis by building chords and progression that moving away traditional 12 note setting.
+<div style="display: flex; gap: 1rem; justify-content: center;">
 
-The general approach of this project is, propose an idea on the frequency space and test it out on established rules (12 key notes, major vs minor chords, or the classical V-I progressoin). If it completely violates human listening experience and or music theory rules, the idea will be tweaked and iterate.
+  <figure style="width: 40%;margin-top: 0.5rem; margin-bottom:0rem">
+    <img src="/images/music/app.jpg" alt="2D Neural Field Architecture"/>
+    <figcaption class="text-center">app interface  </figcaption>
+  </figure>
+  </div>
+
+Harmonization and chord progressions accompany a melody and provide momentum to a piece of music. Although melodic patterns vary widely, there appears to be an underlying structure shared by many common chord progressions. Traditional music theory and heuristics attempt to describe the structures that produce such momentum in music. In contrast, this project seeks to convey these structures through a purely computational and frequency-based analysis. It does so by constructing chords and progressions that are outside of the traditional 12-note system.
+
+The general approach of this project is to propose ideas directly in frequency space and evaluate them against established musical conventions, such as the 12-tone scale, major and minor chords, and classical progressions like V–I. If an idea strongly conflicts with human listening experience or well-established music theory, it will be refined and modified.
 
 # Quantifying Tension
 
-I used RQA (recurrent quantification analysis) following this [paper](https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2018.00381/full) to calculate recurrence score for each chord. On the high level, rqa takes sliding window samples and convert each sample to high dimension vector. Pairwise distance between each vector is calcualted. distance within a certain threshold is consider recurrent. When a frequency is more consonant, more repeats / cycles happen which led to more frequent distance that are considered recurrent.
+I used Recurrence Quantification Analysis (RQA), following the methodology described in this [paper](https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2018.00381/full) to compute a recurrence score for each chord. At a high level, RQA operates by extracting sliding-window samples from the signal and mapping each sample into a high-dimensional vector space. Pairwise distances between these vectors are then computed, and pairs whose distances fall below a fixed threshold are considered recurrent. More consonant frequency relationships produce stronger periodicity, leading to more repeated or cyclic patterns in the signal. As a result, a greater number of vector pairs fall within the recurrence threshold, yielding higher RQA scores.
 
-Starting with simple two-note intervals. Following the paper's parameters, I was able to produce similar results on intervals. There were minor variations but the ranking is the same.
+Starting with simple two-note intervals, and using the parameters specified in the paper, I was able to reproduce similar results for individual intervals. While there exists minor numerical differences, the overall ranking of interval consonance is consistent.
 
   <div style="display: flex; gap: 1rem; justify-content: center;">
   <figure style="width: 20%;margin-top: 0.5rem">
@@ -37,7 +45,7 @@ Starting with simple two-note intervals. Following the paper's parameters, I was
 
   </div>
 
-Some modifications were made to the raw recurrent analysis to better reflect musical listening experience.
+Some modifications were made to the above recurrent analysis to better reflect musical listening experience.
 
 ## ratio snapping 
 There are two common tuning systems: just intonation and 12-tone equal temperament (12-TET). Just intonation expresses musical intervals as exact integer ratios, whereas 12-TET divides the octave into 12 equal logarithmic steps. Although the perceptual difference between these systems is often indiscernable for human listeners, it has a significant impact on RQA-based analysis. For example, a ratio difference such as 2:3 versus 2:3.01 is hardly distinguishable to the human ear, but it can substantially disrupt the RQA score.
@@ -72,12 +80,12 @@ The following table demonstrate the effect with and without bass stability.
 
 # Tension Progression
 
-There are many specific musical theory and heuristic on the structure of harmonic progression but little are frequency perspective. The motivation is no matter what genre or culture or scale, there has to be a rise and fall in tension. For example, there often is a increase in tension in the begining and a resolution to home at the end. 
+There are many music theory rules and heuristics that describe the structure of harmonic progressions, but few examine them from a frequency-based perspective. The motivation behind this project is the observation that, regardless of genre, culture, or scale system, music tends to exhibit a rise and fall in tension. For example, harmonic progressions often build tension near the beginning and resolve back to a home or tonic chord toward the end.
 
 ## distance from home
-the progression of tension is not only in terms of dissonance within the chord, it is also percieved through distance from home key. For example, V is further away than I from home root note even though both chords are the same major chord. 
+The progression of tension is not determined solely by the level of dissonance within individual chords; it is also perceived through a chord’s distance from the home key. For example, given a key, the V chord is felt to be further from the tonic than the I chord, even though both are major triads.
 
-To take this into account, tension of a chord in the context of harmonic progression is rqa of three notes plus the home note played together at same time, with an amplitude boost on the home note. This ensures chords closely related to the home note is rewarded and have higher rqa.
+To account for this effect, the tension of a chord within a harmonic progression is computed by evaluating the RQA of the chord’s three notes played simultaneously with the home note, with an amplitude boost applied to the home note. This approach rewards chords that are more closely related to the home key, resulting in higher RQA scores for harmonically stable chords.
 
 | Roman | Type | Notes | RQA(alone) | RQA(with home) | Norm RQA with home & bass |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -97,7 +105,7 @@ To take this into account, tension of a chord in the context of harmonic progres
 | **v** | minor | G3-A#3-D3 | 0.002 | 0.006 | 0.219 |
 
 ## Voice Leading 
-I want to reward smooth voice leading that cause big tension changes. The reason V-I is such an effective resolution is because V is very far from home and I is at home while V-I only has 3 semitone changes.
+I want to reward smooth voice leading that produces large changes in perceived tension. One reason the V–I cadence is such an effective resolution is that the V chord is harmonically far from the home key, while the I chord represents complete resolution, yet the transition between them requires only three semitone movements.
 
 | Progression | From Tension | To Tension | ΔT | VL Dist | ΔT Rate |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -115,8 +123,8 @@ I want to reward smooth voice leading that cause big tension changes. The reason
 | **i (C3-D#3-G3) → I** | 0.064 | 0.000 | -0.064 | 1.0 | -0.256 |
 | **IV (F3-A3-C3) → I** | 0.045 | 0.000 | -0.045 | 3.0 | -0.070 |
 
-## real world dataset tension curve
-Now the metric of tension is finally completed and can be used in chord progression. We can analyze how change in progressoin look like using the [CHORDONOMICON](https://arxiv.org/abs/2410.22046) dataset. 4 bar chor dprogerssion is identified and transcribed to the same major. the most popular 5 types of chord progression is displayed here.
+## tension curve in real world music
+With the tension metric now fully defined, it can be applied to the analysis of chord progressions. To examine how tension evolves over time in real music, we analyze chord progressions from the [CHORDONOMICON](https://arxiv.org/abs/2410.22046) dataset. Four-bar chord progressions are identified and transposed into a common major key. The five most frequently occurring chord progression types are shown below.
 
 <div style="display: flex; gap: 1rem; justify-content: center;">
 
@@ -126,16 +134,21 @@ Now the metric of tension is finally completed and can be used in chord progress
   </figure>
   </div>
 
-The fluctuation pattern vary a lot; some start near home and wonder out then resolve at the end, some start far away home. This motivates a custom user-input tension curve that the algorithm comforms towards.
+The fluctuation patterns vary widely: some progressions begin near the home key, wander outward, and resolve at the end, while others start far from the home key. This variability motivates the use of a user-defined tension curve that the algorithm is designed to follow.
 
 # Chord Pallete
 
-The main idea of chord pallete is to limit the optimzier to look at a subset of all possible triads that can be made up in the scale.
+The main idea behind the chord palette is to constrain the optimizer to a manageable subset of all possible triads that can be formed from a given scale.
+
+To ensure harmonic color and richness, a simple heuristic is used: for each note in the scale, a pair of major- and minor-equivalent chords is generated using that note as the root. This is done by first identifying the most stable triad according to the snapped, bass-boosted RQA metric. Then, analogous to forming a minor chord, the least stable note in the triad is shifted to its nearest neighboring pitch (either upward or downward), and the option that results in the lower RQA score is selected. This process is repeated for every note in the scale.
 
 # Progression Optimizer
-iterate through all possible sequence of 4 chords and find the path that most closely match the provided change in tension curve. Fitting to change in tension instead of offset tension makes things relative and remove bias.
+Given the chord palette, the algorithm enumerates all possible four-chord sequences and selects the progression whose tension changes most closely match the user-provided tension curve. Fitting to changes in tension, rather than absolute tension values, makes the comparison relative and helps remove bias.
 
 # Other considerations
-## four note chord?
-## no tonnetz
 
+## four note chord
+The project can be easily extended to handle more complex four-note chords. Doing so may require additional heuristics for the optimizer to prevent the search space from growing non-polynomially.
+
+## tonnetz
+Another possible way for defining a chord palette (i.e., a subset of chords to choose from) is to use the[tonnetz](https://en.wikipedia.org/wiki/Tonnetz). However, chords that are close on the Tonnetz tend to favor smooth voice leading and may not support strong functional resolutions, such as the V–I cadence.
