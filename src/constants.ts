@@ -19,12 +19,12 @@ interface Social {
 }
 
 export const SOCIALS: Social[] = [
-  // {
-  //   name: "GitHub",
-  //   href: "https://github.com/helenawsu",
-  //   linkTitle: `${SITE.title} on GitHub`,
-  //   icon: IconGitHub,
-  // },
+  {
+    name: "main",
+    href: "https://helenawsu.github.io/",
+    linkTitle: `${SITE.title} on GitHub`,
+    icon: IconGitHub,
+  },
   // {
   //   name: "X",
   //   href: "https://x.com/username",

@@ -15,6 +15,8 @@ description:
 
 Try it out here! https://harmonicgraph.vercel.app/. Users can select a list of arbitrary frequencies as a scale, define a tension curve, and then generate a chord progression!
 
+code is [here](https://github.com/helenawsu/harmonic_graph).
+
 <div style="display: flex; gap: 1rem; justify-content: center;">
 
   <figure style="width: 40%;margin-top: 0.5rem; margin-bottom:0rem">
